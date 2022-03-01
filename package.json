@@ -1,0 +1,31 @@
+{
+  "name": "ner-monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "api",
+    "app"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace app",
+    "start": "npm run start --workspace api",
+    "dev:api": "npm run build && npm run dev --workspace api"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oscaroceguera/ner-monorepo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oscaroceguera/ner-monorepo/issues"
+  },
+  "homepage": "https://github.com/oscaroceguera/ner-monorepo#readme",
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15"
+  }
+}
