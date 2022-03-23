@@ -27,9 +27,14 @@ const unknowEndponit = (req, res) => {
 
 app.use(unknowEndponit);
 
-module.exports = app;
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message);
 
-// const PORT = process.env.PORT;
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
+  if (error.name == "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+  next(error);
+};
+app.use(errorHandler);
+
+module.exports = app;

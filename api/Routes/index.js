@@ -6,6 +6,7 @@ const {
   getNotes,
   deleteNote,
   addNote,
+  updateNote,
 } = require("../Controllers/notes");
 
 const {
@@ -20,6 +21,7 @@ app.get("/notes", getNotes);
 app.get("/notes/:id", getNote);
 app.delete("/notes/:id", deleteNote);
 app.post("/notes", addNote);
+app.put("/notes/:id", updateNote);
 
 app.get("/persons", getPersons);
 app.get("/info", getPersonsInfo);

@@ -1,14 +1,23 @@
+const { response } = require("express");
 const Note = require("../Models/notes");
 
 exports.getNotes = (req, res) => {
   Note.find({}).then((notes) => res.json(notes));
 };
 
-exports.getNote = (req, res) => {
-  Note.findById(req.params.id).then((note) => res.json(note));
+exports.getNote = (req, res, next) => {
+  Note.findById(req.params.id)
+    .then((note) => {
+      if (note) {
+        res.json(note);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 };
 
-exports.deleteNote = async (req, res) => {
+exports.deleteNote = async (req, res, next) => {
   const id = req.params.id;
 
   try {
@@ -18,7 +27,7 @@ exports.deleteNote = async (req, res) => {
 
     res.send(note);
   } catch (err) {
-    res.status(500).send();
+    next(err);
   }
 };
 
@@ -40,4 +49,22 @@ exports.addNote = (request, response) => {
   note.save().then((savedNote) => {
     response.json(savedNote);
   });
+};
+
+exports.updateNote = (req, res, next) => {
+  const {
+    body: { content, important },
+    params: { id },
+  } = req;
+
+  const note = {
+    content: content,
+    important: important,
+  };
+
+  Note.findByIdAndUpdate(id, note, { new: true })
+    .then((updateNote) => {
+      res.json(updateNote);
+    })
+    .catch((error) => next(error));
 };
