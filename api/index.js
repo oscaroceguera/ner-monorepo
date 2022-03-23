@@ -20,6 +20,12 @@ app.use(express.static("../app/build"));
 
 app.use("/api", routes);
 
+const unknowEndponit = (req, res) => {
+  res.status(404).send({ error: "unknow endpoint" });
+};
+
+app.use(unknowEndponit);
+
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
