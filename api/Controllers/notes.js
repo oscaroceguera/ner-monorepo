@@ -1,4 +1,3 @@
-const { response } = require("express");
 const Note = require("../Models/notes");
 
 exports.getNotes = (req, res) => {
@@ -21,7 +20,7 @@ exports.deleteNote = async (req, res, next) => {
   const id = req.params.id;
 
   try {
-    const note = await Note.findOneAndRemove({ id });
+    const note = await Note.findByIdAndRemove(id);
 
     if (!note) return res.status(404).send();
 

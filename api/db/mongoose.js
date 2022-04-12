@@ -1,8 +1,16 @@
-let mongoose = require("mongoose");
+const mongoose = require("mongoose");
+const logger = require("../utils/logger");
+const config = require("../utils/config");
 
-const url = process.env.MONGODB_URI;
+const url = config.MONGODB_URI;
 
-console.log("connecting  to", url);
-mongoose.connect(url).then((result) => console.log("connected to MongoDB"));
+logger.info("Connecting to ", url);
+
+mongoose
+  .connect(url)
+  .then(() => logger.info("connected to MongoDB"))
+  .catch((error) => {
+    logger.error("error connecting to MongoDB:", error.message);
+  });
 
 module.exports = { mongoose };

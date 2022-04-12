@@ -17,6 +17,8 @@ const {
   addPersons,
 } = require("../Controllers/persons");
 
+const { getBlogs, addBlogs } = require("../Controllers/blog");
+
 app.get("/notes", getNotes);
 app.get("/notes/:id", getNote);
 app.delete("/notes/:id", deleteNote);
@@ -28,5 +30,8 @@ app.get("/info", getPersonsInfo);
 app.get("/persons/:id", getPerson);
 app.delete("/persons/:id", deletePerson);
 app.post("/persons", addPersons);
+
+app.get("/blogs", getBlogs);
+app.post("/blogs", addBlogs);
 
 module.exports = app;
