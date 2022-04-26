@@ -1,36 +1,47 @@
+const { request, response } = require("../app");
 const Note = require("../Models/notes");
 
 exports.getNotes = (req, res) => {
   Note.find({}).then((notes) => res.json(notes));
 };
 
-exports.getNote = (req, res, next) => {
-  Note.findById(req.params.id)
-    .then((note) => {
-      if (note) {
-        res.json(note);
-      } else {
-        res.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
+exports.getNote = async (req, res, next) => {
+  const note = await Note.findById(req.params.id);
+
+  if (note) {
+    res.json(note);
+  } else {
+    res.status(404).end();
+  }
+
+  // try {
+  //   const note = await Note.findById(req.params.id);
+
+  //   if (note) {
+  //     res.json(note);
+  //   } else {
+  //     res.status(404).end();
+  //   }
+  // } catch (exception) {
+  //   next(exception);
+  // }
 };
 
 exports.deleteNote = async (req, res, next) => {
-  const id = req.params.id;
+  // USING: TRY/CATCH
+  // try {
+  //   await Note.findByIdAndRemove(req.params.id);
+  //   res.status(204).end();
+  // } catch (exception) {
+  //   next(exception);
+  // }
 
-  try {
-    const note = await Note.findByIdAndRemove(id);
-
-    if (!note) return res.status(404).send();
-
-    res.send(note);
-  } catch (err) {
-    next(err);
-  }
+  // USING: express-async-errors
+  await Note.findByIdAndRemove(req.params.id);
+  res.status(204).end();
 };
 
-exports.addNote = (request, response) => {
+exports.addNote = async (request, response, next) => {
   const {
     body: { content, important },
   } = request;
@@ -45,9 +56,15 @@ exports.addNote = (request, response) => {
     date: new Date(),
   });
 
-  note.save().then((savedNote) => {
-    response.json(savedNote);
-  });
+  // try {
+  //   const savedNote = await note.save();
+  //   response.status(201).json(savedNote);
+  // } catch (exception) {
+  //   next(exception);
+  // }
+
+  const savedNote = await note.save();
+  response.status(201).json(savedNote);
 };
 
 exports.updateNote = (req, res, next) => {
