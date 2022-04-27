@@ -1,8 +1,9 @@
-const { request, response } = require("../app");
 const Note = require("../Models/notes");
+const User = require("../Models/users");
 
-exports.getNotes = (req, res) => {
-  Note.find({}).then((notes) => res.json(notes));
+exports.getNotes = async (req, res) => {
+  const notes = await Note.find({}).populate("user", { username: 1, name: 1 });
+  res.json(notes);
 };
 
 exports.getNote = async (req, res, next) => {
@@ -41,19 +42,23 @@ exports.deleteNote = async (req, res, next) => {
   res.status(204).end();
 };
 
-exports.addNote = async (request, response, next) => {
+exports.addNote = async (request, response) => {
   const {
-    body: { content, important },
+    body: { content, important, userId },
   } = request;
 
   if (!content) {
     return response.status(400).json({ error: "content missing" });
   }
 
+  const user = await User.findById(userId);
+
   const note = new Note({
     content,
-    important: important || false,
+    // important: important === undefined ? false : important,
+    important: important ?? false,
     date: new Date(),
+    user: user._id,
   });
 
   // try {
@@ -64,7 +69,10 @@ exports.addNote = async (request, response, next) => {
   // }
 
   const savedNote = await note.save();
-  response.status(201).json(savedNote);
+  user.notes = user.notes.concat(savedNote._id);
+  await user.save();
+
+  response.json(savedNote);
 };
 
 exports.updateNote = (req, res, next) => {

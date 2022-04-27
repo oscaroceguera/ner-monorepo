@@ -17,6 +17,8 @@ const {
   addPersons,
 } = require("../Controllers/persons");
 
+const { addUser, getUser } = require("../Controllers/users");
+
 const { getBlogs, addBlogs } = require("../Controllers/blog");
 
 app.get("/notes", getNotes);
@@ -33,5 +35,8 @@ app.post("/persons", addPersons);
 
 app.get("/blogs", getBlogs);
 app.post("/blogs", addBlogs);
+
+app.post("/users", addUser);
+app.get("/users", getUser);
 
 module.exports = app;
